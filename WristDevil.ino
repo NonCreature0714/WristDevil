@@ -16,8 +16,8 @@ void setup()
 
 void loop()
 {
-  int uS = sonar.ping();
+  int uS = sonar.ping_cm();
   Serial.print("Ping: ");
-  Serial.print(uS / US_ROUNDTRIP_CM); // Distance in cm
+  Serial.print(sonar.ping_cm(); // Distance in cm
   Serial.println("cm");
 }
