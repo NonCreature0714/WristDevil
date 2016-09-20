@@ -33,6 +33,12 @@ int rollingAverage(int average, int newSample){
   return average;
 }
 
+int rollingAverage(int average, int newSample){
+  average -= average/SAMPLE_SIZE;
+  average += newSample/SAMPLE_SIZE;
+  return average;
+}
+
 void setup()
 {
   pinMode(LED, OUTPUT);
@@ -42,15 +48,13 @@ void setup()
 void loop()
 {
   analogWrite(LED, avg);
-
+  
   int uS = sonar.ping_cm();
   brightness = MAX_BRIGHT - uS;
   avg = rollingAverage(avg, brightness);
+  
+  delay(10);
 
-  delay(30);
-
-  //Print statements for debug.
-  Serial.print("Ping: "); Serial.print(uS); Serial.println("cm :: ");
+  Serial.print("Ping: ");Serial.print(sonar.ping_cm()); Serial.println("cm");
   Serial.print("LED Brightness: "); Serial.println(avg);
-
 }
