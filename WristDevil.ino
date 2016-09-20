@@ -39,6 +39,22 @@ int rollingAverage(int average, int newSample){
   return average;
 }
 
+//TODO: work on light conversion.
+int convertToLightLevel(int average){
+  int light;
+  int range = 238 - 205;
+  
+  if(average >=238)
+    return 255;
+  else if (average <= 205)
+    return 0;
+  else{ 
+    //1-254 range return,
+    //based on range of 33
+    return average/range;
+  }
+}
+
 void setup()
 {
   pinMode(LED, OUTPUT);
@@ -53,7 +69,7 @@ void loop()
   brightness = MAX_BRIGHT - uS;
   avg = rollingAverage(avg, brightness);
   
-  delay(10);
+  delay(30);
 
   Serial.print("Ping: ");Serial.print(sonar.ping_cm()); Serial.println("cm");
   Serial.print("LED Brightness: "); Serial.println(avg);
