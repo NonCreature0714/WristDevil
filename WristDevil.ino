@@ -45,7 +45,7 @@ int rollingAverage(int average, int newSample){
   return average;
 }
 
-int convertToLightLevel(int average){
+int convertToLightLevel(int average){ //Intended a custom map() function.
   int light;
   int range = 238 - 205;
 
@@ -87,16 +87,15 @@ void setup()
 
 void loop()
 {
-  //newRawSonar = sonar.ping_cm();
   newRawSonar = sensorRead();
-  //int uS = smoothZeroes(oldRawSonar, newRawSonar);
-  oldRawSonar = newRawSonar;
-  brightness = MAX_BRIGHT - uS;
+  //int uS = smoothZeroes(oldRawSonar, newRawSonar); //TODO: move to function which supports sensorRead().
+  oldRawSonar = newRawSonar; //TODO: not needed here. Move to function which supports sensorRead().
+  brightness = convertToLightLevel(uS);
 
   //analogWrite(LED, convertToLightLevel(avg));
   analogWrite(LED, brightness);
 
-  avg = rollingAverage(avg, brightness);
+  avg = rollingAverage(avg, brightness); //TODO: not needed here. Move to sensorRead().
 
   delay(30); //need to delay long enouch for the sonic echo to send an receive.
 
