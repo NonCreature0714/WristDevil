@@ -1,4 +1,5 @@
 #include <NewPing.h>
+//TODO: #include <WristDevil.h> ... make the library!!!
 
 /*
  * Sept 19, 2016.
@@ -9,34 +10,73 @@
  *  to text the program logic/responsiveness.
  */
 
-// Ultrasonic Detector
+/*
+ * Oct 2, 2016.
+ *  Author: Bill Brubaker
+ *  Stephen Byrne suggested that the sonic distance
+ *  sensor shouldn't return 0 values, which which causes
+ *  input generated from the sensor cause errors in the
+ *  distance detection algorithms.
+ *  Meason Wiley recommended that this process happen in
+ *  a loop separate from Arduino's `loop()`.
+ */
+
+//Ultrasonic Detector
 const int TRIGGER_PIN = 12;
 const int ECHO_PIN = 11;
-const int MAX_DISTANCE = 255; //Set to 255 for LED dimming test.
-const int MAX_BRIGHT = 255;
+const int MAX_DISTANCE = 255;
+
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
-const int SAMPLE_SIZE = 20;
+const int SAMPLE_SIZE = 5;
 
 int avg = 1;
 int LED = 6;
 int brightness = 0;
 const int MAX_BRIGHT = 255;
 
-//Variables/consts for led pin
-//TODO: int LED //Assign ~PWN pin from board.
-//TODO: unsigned long brightness //Init to 0.
-//TODO: unsigned long fadeAmount //TODO calculate fadeAmount. NOTE: may not need this variable.
+int newRawSonar = 0;
+int oldRawSonar = 0;
 
 int rollingAverage(int average, int newSample){
   average -= average/SAMPLE_SIZE;
+  if(average < 0)
+    return 0;
   average += newSample/SAMPLE_SIZE;
   return average;
 }
 
-int rollingAverage(int average, int newSample){
-  average -= average/SAMPLE_SIZE;
-  average += newSample/SAMPLE_SIZE;
-  return average;
+int convertToLightLevel(int average){
+  int light;
+  int range = 238 - 205;
+
+  if(average >=238)
+    return 255;
+  else if (average <= 205)
+    return 0;
+  else{
+    //1-254 range return,
+    //based on range of 33
+    return average/range;
+  }
+}
+
+int convertRawSonar(int rawSig){
+  int bright = MAX_BRIGHT-rawSig;
+  return bright;
+}
+
+int smoothZeroes(int oldValue, int newValue){
+  if(newValue == 0 && oldValue != 0)
+    return oldValue;
+  return newValue;
+}
+
+int sensorRead(){
+  int uSPing = 0;
+  do {
+    uSPing = sonar.ping_cm();
+  } while (uSPing == 0);
+  return uSPing;
 }
 
 void setup()
@@ -47,14 +87,19 @@ void setup()
 
 void loop()
 {
-  analogWrite(LED, avg);
-  
-  int uS = sonar.ping_cm();
+  //newRawSonar = sonar.ping_cm();
+  newRawSonar = sensorRead();
+  //int uS = smoothZeroes(oldRawSonar, newRawSonar);
+  oldRawSonar = newRawSonar;
   brightness = MAX_BRIGHT - uS;
-  avg = rollingAverage(avg, brightness);
-  
-  delay(10);
 
-  Serial.print("Ping: ");Serial.print(sonar.ping_cm()); Serial.println("cm");
-  Serial.print("LED Brightness: "); Serial.println(avg);
+  //analogWrite(LED, convertToLightLevel(avg));
+  analogWrite(LED, brightness);
+
+  avg = rollingAverage(avg, brightness);
+
+  delay(30); //need to delay long enouch for the sonic echo to send an receive.
+
+  Serial.print("Ping: ");Serial.print(uS); Serial.println("cm");
+  Serial.print("LED Brightness: "); Serial.println(brightness);
 }
