@@ -9,6 +9,10 @@
 
 /*
  * Notes on Functionality.
+ *
+ * This iteration of WD is designe to work with
+ * one sonic distacne detector, HC-SR04, and the
+ * NewPing library.
  **/
 
 /*
@@ -35,9 +39,9 @@
  **/
 
 //Ultrasonic Detector
-const int TRIGGER_PIN = 12;
-const int ECHO_PIN = 11;
-const int MAX_DISTANCE = 255;
+#define TRIGGER_PIN = 12
+#define ECHO_PIN = 11
+#define MAX_DISTANCE = 255
 /////////////////////
 
 //Instantiate NewPing object.
@@ -45,15 +49,15 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 /////////////////////////////
 
 //Simulated sample set for rolling average.
-const int SAMPLE_SIZE = 5;
+#define SAMPLE_SIZE = 5
 ////////////////////////////////////////////
 
 //Feedback setup.
 int FEEDBACK_PIN_1 = 6;
 int brightness = 0;
-const int MAX_BRIGHT = 255;
-const int DIMMING_STEP = 5;
-const int MAX_READ_ATTEMPTS = 5;
+#define MAX_BRIGHT = 255
+#define DIMMING_STEP = 5
+#define MAX_READ_ATTEMPTS = 5
 /////////////////
 
 //Variables to retain data.
@@ -63,10 +67,10 @@ int rollAvg = 0;
 //////////////////////////
 
 //Values for sensor control.
-const int FAR_DISTANCE_LIMIT = 250;
-const int NEAR_DISTANCE_LIMIT = 1;
-const int MAIN_LOOP_DELAY = 30;
-const int BAUD_RATE = 115200;
+#define FAR_DISTANCE_LIMIT = 250
+#define NEAR_DISTANCE_LIMIT = 1
+#define MAIN_LOOP_DELAY = 30
+#define BAUD_RATE = 115200
 ////////////////////////////////
 
 int rollingAverage(int & average, const int & newSample){
