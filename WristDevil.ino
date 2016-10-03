@@ -2,13 +2,23 @@
 //TODO: #include <WristDevil.h> ... make the library!!!
 
 /*
+ * WristDevil.
+ *
+ * First Generation.
+ **/
+
+/*
+ * Notes on Functionality.
+ **/
+
+/*
  * Sept 19, 2016.
  *  Author: Bill Brubaker
  *  LED test for WristDevil.
  *  At this time, the Batlab has no haptic motors.
  *  So in the meantime, we are going to use an LED
  *  to text the program logic/responsiveness.
- */
+ **/
 
 /*
  * Oct 2, 2016.
@@ -22,7 +32,7 @@
  *
  *  Changed LED to FEEDBACK_PIN_1 anticipating change
  *  for haptic motor addition.
- */
+ **/
 
 //Ultrasonic Detector
 const int TRIGGER_PIN = 12;
@@ -74,10 +84,10 @@ int convertRawSonarToRGBLevel(const int & fromSig){
 
 int interpretDataFrom(int & sensorValue){//Control behavior of feedback.
   if(rollAvg > FAR_DISTANCE_LIMIT){
-    rollAvg = rollAvg(rollAvg, sensorValue);
+    rollAvg = rollingAverage(rollAvg, sensorValue);
     return sensorValue -= sensorValue-DIMMING_STEP;
   }
-    rollAvg = rollingAverage(rollAvg,sensorValue);
+  rollAvg = rollingAverage(rollAvg,sensorValue);
   return sensorValue;
 }//End of interpretDataFrom().
 
@@ -108,6 +118,6 @@ void loop()
 
   delay(MAIN_LOOP_DELAY); //need to delay long enouch for the sonic echo to send an receive.
 
-  Serial.print("Ping: ");Serial.print(uS); Serial.println("cm");
+  Serial.print("Ping: ");Serial.print(newRawSonar); Serial.println("cm");
   Serial.print("FEEDBACK_PIN_1 Brightness: "); Serial.println(brightness);
 }//End of loop().
