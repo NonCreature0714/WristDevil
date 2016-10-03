@@ -17,88 +17,97 @@
  *  sensor shouldn't return 0 values, which which causes
  *  input generated from the sensor cause errors in the
  *  distance detection algorithms.
- *  Meason Wiley recommended that this process happen in
- *  a loop separate from Arduino's `loop()`.
+ *  Meason Wiley recommended that this logic happen in
+ *  a function separate from Arduino's `loop()`.
+ *
+ *  Changed LED to FEEDBACK_PIN_1 anticipating change
+ *  for haptic motor addition.
  */
 
 //Ultrasonic Detector
 const int TRIGGER_PIN = 12;
 const int ECHO_PIN = 11;
 const int MAX_DISTANCE = 255;
+/////////////////////
 
+//Instantiate NewPing object.
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
-const int SAMPLE_SIZE = 5;
+/////////////////////////////
 
-int avg = 1;
-int LED = 6;
+//Simulated sample set for rolling average.
+const int SAMPLE_SIZE = 5;
+////////////////////////////////////////////
+
+//Feedback setup.
+int FEEDBACK_PIN_1 = 6;
 int brightness = 0;
 const int MAX_BRIGHT = 255;
+const int DIMMING_STEP = 5;
+const int MAX_READ_ATTEMPTS = 5;
+/////////////////
 
+//Variables to retain data.
 int newRawSonar = 0;
 int oldRawSonar = 0;
+int rollAvg = 0;
+//////////////////////////
 
-int rollingAverage(int average, int newSample){
+//Values for sensor control.
+const int FAR_DISTANCE_LIMIT = 250;
+const int NEAR_DISTANCE_LIMIT = 1;
+const int MAIN_LOOP_DELAY = 30;
+const int BAUD_RATE = 115200;
+////////////////////////////////
+
+int rollingAverage(int & average, const int & newSample){
   average -= average/SAMPLE_SIZE;
   if(average < 0)
     return 0;
   average += newSample/SAMPLE_SIZE;
   return average;
-}
+}//End of rollingAverage.
 
-int convertToLightLevel(int average){ //Intended a custom map() function.
-  int light;
-  int range = 238 - 205;
-
-  if(average >=238)
-    return 255;
-  else if (average <= 205)
-    return 0;
-  else{
-    //1-254 range return,
-    //based on range of 33
-    return average/range;
-  }
-}
-
-int convertRawSonar(int rawSig){
-  int bright = MAX_BRIGHT-rawSig;
+int convertRawSonarToRGBLevel(const int & fromSig){
+  int bright = MAX_BRIGHT-fromSig;
   return bright;
-}
+}//End of convertRawSonarToRGBLevel().
 
-int smoothZeroes(int oldValue, int newValue){
-  if(newValue == 0 && oldValue != 0)
-    return oldValue;
-  return newValue;
-}
+int interpretDataFrom(int & sensorValue){//Control behavior of feedback.
+  if(rollAvg > FAR_DISTANCE_LIMIT){
+    rollAvg = rollAvg(rollAvg, sensorValue);
+    return sensorValue -= sensorValue-DIMMING_STEP;
+  }
+    rollAvg = rollingAverage(rollAvg,sensorValue);
+  return sensorValue;
+}//End of interpretDataFrom().
 
 int sensorRead(){
+  int numTries = 0;
   int uSPing = 0;
   do {
+    ++numTries;
     uSPing = sonar.ping_cm();
+    if(numTries > MAX_READ_ATTEMPTS)
+      return MAX_DISTANCE; //If more than 5 tries, return max range.
   } while (uSPing == 0);
   return uSPing;
-}
+}//End of sensorRead().
 
 void setup()
 {
-  pinMode(LED, OUTPUT);
-  Serial.begin(115200);
-}
+  pinMode(FEEDBACK_PIN_1, OUTPUT);
+  Serial.begin(BAUD_RATE);
+}//End of setup().
 
 void loop()
 {
   newRawSonar = sensorRead();
-  //int uS = smoothZeroes(oldRawSonar, newRawSonar); //TODO: move to function which supports sensorRead().
-  oldRawSonar = newRawSonar; //TODO: not needed here. Move to function which supports sensorRead().
-  brightness = convertToLightLevel(uS);
+  newRawSonar = interpretDataFrom(newRawSonar);
+  brightness = convertRawSonarToRGBLevel(newRawSonar);
+  analogWrite(FEEDBACK_PIN_1, brightness);
 
-  //analogWrite(LED, convertToLightLevel(avg));
-  analogWrite(LED, brightness);
-
-  avg = rollingAverage(avg, brightness); //TODO: not needed here. Move to sensorRead().
-
-  delay(30); //need to delay long enouch for the sonic echo to send an receive.
+  delay(MAIN_LOOP_DELAY); //need to delay long enouch for the sonic echo to send an receive.
 
   Serial.print("Ping: ");Serial.print(uS); Serial.println("cm");
-  Serial.print("LED Brightness: "); Serial.println(brightness);
-}
+  Serial.print("FEEDBACK_PIN_1 Brightness: "); Serial.println(brightness);
+}//End of loop().
