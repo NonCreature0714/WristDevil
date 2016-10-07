@@ -3,8 +3,15 @@
 
 /*
  * WristDevil.
- *
+ * https://github.com/NonCreature0714/WristDevil
  * First Generation.
+ *
+ * Purpose:
+ *  To give people with sight impairment the ability
+ *  to "sense" their envirment better with a wrist
+ *  worn haptic (vibration) sensor, which vibrates
+ *  more forcefully as it gets in closer proximity
+ * to obstacles.
  **/
 
 /*
