@@ -38,10 +38,19 @@
  *  for haptic motor addition.
  **/
 
+/*
+ * October 3, 2016.
+ *  Author: Bill Brubaker
+ *  Corrected use of #define because:
+ *    1. const was taking up too much space, so the
+ *       compiler was complaining about space
+ *    2. I wasn't using #define correctly anyway
+ **/
+
 //Ultrasonic Detector
-#define TRIGGER_PIN = 12
-#define ECHO_PIN = 11
-#define MAX_DISTANCE = 255
+#define TRIGGER_PIN 12
+#define ECHO_PIN 11
+#define MAX_DISTANCE 255
 /////////////////////
 
 //Instantiate NewPing object.
@@ -49,28 +58,29 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 /////////////////////////////
 
 //Simulated sample set for rolling average.
-#define SAMPLE_SIZE = 5
+#define SAMPLE_SIZE 20
 ////////////////////////////////////////////
 
 //Feedback setup.
-int FEEDBACK_PIN_1 = 6;
-int brightness = 0;
-#define MAX_BRIGHT = 255
-#define DIMMING_STEP = 5
-#define MAX_READ_ATTEMPTS = 5
+#define FEEDBACK_PIN_1 6
+#define MAX_BRIGHT 255
+#define DIMMING_STEP 5
+#define MAX_READ_ATTEMPTS 10
 /////////////////
 
 //Variables to retain data.
+//TODO: convert values to uint8-16_t.
+int brightness = 0;
 int newRawSonar = 0;
 int oldRawSonar = 0;
 int rollAvg = 0;
 //////////////////////////
 
 //Values for sensor control.
-#define FAR_DISTANCE_LIMIT = 250
-#define NEAR_DISTANCE_LIMIT = 1
-#define MAIN_LOOP_DELAY = 30
-#define BAUD_RATE = 115200
+#define FAR_DISTANCE_LIMIT 250
+#define NEAR_DISTANCE_LIMIT 1
+#define MAIN_LOOP_DELAY 30
+#define BAUD_RATE 115200
 ////////////////////////////////
 
 int rollingAverage(int & average, const int & newSample){
@@ -125,3 +135,4 @@ void loop()
   Serial.print("Ping: ");Serial.print(newRawSonar); Serial.println("cm");
   Serial.print("FEEDBACK_PIN_1 Brightness: "); Serial.println(brightness);
 }//End of loop().
+//End of WristDevil.
