@@ -6,7 +6,6 @@
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <NewPing.h>
-//TODO: #include <WristDevil.h> ... make the library!!!
 
 /*
  * WristDevil.
@@ -25,7 +24,7 @@
  * Notes on Functionality.
  *
  * This iteration of WD (WristDevil) is designed
- *to work with one sonic distacne detector, the
+ *to work with one sonic distance detector, the
  * HC-SR04, and is dependant NewPing library.
  * https://github.com/PaulStoffregen/NewPing
  **/
@@ -51,15 +50,6 @@
  *
  *  Changed LED to FEEDBACK_PIN_1 anticipating change
  *  for haptic motor addition.
- **/
-
-/*
- * October 3, 2016.
- *  Author: Bill Brubaker
- *  Corrected use of #define because:
- *    1. const was taking up too much space, so the
- *       compiler was complaining about space
- *    2. I wasn't using #define correctly anyway
  **/
 
  /*
