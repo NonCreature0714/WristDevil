@@ -13,7 +13,7 @@
  * This iteration of WD (WristDevil) is designed
  *to work with one sonic distacne detector, the
  * HC-SR04, and is dependant NewPing library.
- * 
+ * https://github.com/PaulStoffregen/NewPing
  **/
 
 /*
