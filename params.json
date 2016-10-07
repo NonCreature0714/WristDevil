@@ -1,0 +1,6 @@
+{
+  "name": "Wrist Devil",
+  "tagline": "Wrist worn sensor for persons with sight impairment. Provides varying levels of haptic feedback based on proximity.",
+  "body": "### Welcome to ACC Library Services Wrist Devil Project\r\nThis open source project was started in August of 2016 as an educational venture in sensors, coding, iterative design, and microprocessors.  All Austin Community College students, staff, and faculty are welcome to join the [Batlab Makerspace](http://researchguides.austincc.edu/makerspace), and, of course, all others are welcome to use/reuse the code.\r\n\r\n### Vision\r\nTo empower persons with sight impairment. To help them live a fuller life, and to have fun building it for them. To create a thing which is durable, comfortable, smart, and practical.\r\n\r\n### Authors and Contributors\r\nCode written by Bill Brubaker (@noncreature0714). Designed by Bill Brubaker, Meason Wiley, and Stephen Byrne(@sbyrne1). \r\n\r\n### Support or Contact\r\nHaving trouble with your Wrist Devil project or code? Check out our [official website](http://researchguides.austincc.edu/makerspace) or contact the [Batlab Coordinator](jwiley@austincc.edu) and we’ll help you sort it out.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
