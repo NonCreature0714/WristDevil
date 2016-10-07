@@ -10,9 +10,10 @@
 /*
  * Notes on Functionality.
  *
- * This iteration of WD is designe to work with
- * one sonic distacne detector, HC-SR04, and the
- * NewPing library.
+ * This iteration of WD (WristDevil) is designed
+ *to work with one sonic distacne detector, the
+ * HC-SR04, and is dependant NewPing library.
+ * 
  **/
 
 /*
@@ -46,6 +47,14 @@
  *       compiler was complaining about space
  *    2. I wasn't using #define correctly anyway
  **/
+
+ /*
+  * October 7, 2016.
+  *  Author: Bill Brubaker
+  *  Successfully added haptic motor to current build!!
+  *  Rewrote function names to be more generic, and not
+  *  just for LEDs or haptic motors.
+  **/
 
 //Ultrasonic Detector
 #define TRIGGER_PIN 12
@@ -91,10 +100,10 @@ int rollingAverage(int & average, const int & newSample){
   return average;
 }//End of rollingAverage.
 
-int convertRawSonarToRGBLevel(const int & fromSig){
+int convertRawSonarToFeedback(const int & fromSig){
   int bright = MAX_BRIGHT-fromSig;
   return bright;
-}//End of convertRawSonarToRGBLevel().
+}//End of convertRawSonarToFeedback().
 
 int interpretDataFrom(int & sensorValue){//Control behavior of feedback.
   if(rollAvg > FAR_DISTANCE_LIMIT){
@@ -127,7 +136,7 @@ void loop()
 {
   newRawSonar = sensorRead();
   newRawSonar = interpretDataFrom(newRawSonar);
-  brightness = convertRawSonarToRGBLevel(newRawSonar);
+  brightness = convertRawSonarToFeedback(newRawSonar);
   analogWrite(FEEDBACK_PIN_1, brightness);
 
   delay(MAIN_LOOP_DELAY); //need to delay long enouch for the sonic echo to send an receive.
